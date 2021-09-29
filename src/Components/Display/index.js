@@ -4,7 +4,7 @@ import { useState } from "react";
 function Display() {
   const [currentSale, setCurrentSale] = useState([]);
   const [randomItem, setRandomItem] = useState([]);
-  const [discount, setdiscount] = useState(0);
+
   const [useProduct, setProduct] = useState([
     { id: 1, name: "Smart TV LED 50", price: 1999.0 },
     { id: 2, name: "PlayStation 5", price: 12000.0 },
@@ -16,8 +16,10 @@ function Display() {
   const handleClick = (item) => {
     setCurrentSale([...currentSale, item]);
   };
-  const totalPrice =
-    currentSale.length > 1 && currentSale.reduce((acc, vl) => acc + vl.price);
+  const totalPrice = currentSale.reduce((acc, vl) => {
+    return acc + vl.price - vl.discount;
+  }, 0);
+
   return (
     <>
       <span>DIsplay</span>
@@ -26,22 +28,20 @@ function Display() {
         useProduct={useProduct}
         randomItem={randomItem}
         setRandomItem={setRandomItem}
-        discount={discount}
-        setdiscount={setdiscount}
       />
-      <h5>Preco total: {totalPrice}</h5>
+      <h5>Preco total: {totalPrice.toFixed(2)}</h5>
       <ul>
         {currentSale.map((item, index) => (
           <li key={index}>
             <h3>{item.name}</h3>
-            <span>Preco: {item.price.toFixed(2)}</span>
+            <span>Preco: R${item.price.toFixed(2)}</span>
             <span>Desconto: {item.discount.toFixed(2)}%</span>
             <span>
               Valor do desconto:{" "}
               {((item.price * item.discount) / 100).toFixed(2)}
             </span>
             <h4>
-              Preco do item com desconto:
+              Preco do item com desconto: R$
               {(item.price - (item.price * item.discount) / 100).toFixed(2)}
             </h4>
           </li>
